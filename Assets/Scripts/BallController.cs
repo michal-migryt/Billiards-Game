@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public enum BallType {NULL, WHITE, HALF, FULL, BLACK};
+public enum BallType { NULL, WHITE, HALF, FULL, BLACK };
 [RequireComponent(typeof(SphereCollider))]
 public class BallController : MonoBehaviour
 {
@@ -13,58 +13,64 @@ public class BallController : MonoBehaviour
     [SerializeField] private BallType ballType;
     [SerializeField] private int ballNumber;
     // Start is called before the first frame update
-    private void Awake() {
+    private void Awake()
+    {
         _rb = GetComponent<Rigidbody>();
         PhysicsController.physicsDelegate += ApplyPhysics;
         //StartCoroutine(ManageVelocityEnum());
     }
-    private void Update() {
+    private void Update()
+    {
     }
-    private void LateUpdate() {
+    private void LateUpdate()
+    {
         if (Mathf.Sqrt(Mathf.Pow(_rb.velocity.x, 2) + Mathf.Pow(_rb.velocity.y, 2) + Mathf.Pow(_rb.velocity.z, 2)) <= Mathf.Sqrt(0.0008f))
-            {
-                _rb.velocity = Vector3.zero;
-                _rb.angularVelocity = Vector3.zero;
-            }
-    }
-    private void OnCollisionEnter(Collision other) {
-        if(other.gameObject.tag == "Band")
         {
-        Vector3 objectDir = transform.forward;
-        Vector3 otherNormal =  other.GetContact(0).normal;
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+    }
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Band")
+        {
+            Vector3 objectDir = transform.forward;
+            Vector3 otherNormal = other.GetContact(0).normal;
 
-        _rb.velocity = Vector3.Reflect(_rb.velocity, otherNormal);
+            _rb.velocity = Vector3.Reflect(_rb.velocity, otherNormal);
 
-        _rb.angularVelocity = -_rb.angularVelocity;
+            _rb.angularVelocity = -_rb.angularVelocity;
         }
     }
     public void ManageVelocity()
     {
         _rb.velocity = _rb.velocity * 0.9985f;
         _rb.angularVelocity = _rb.angularVelocity * 0.9985f;
-        if(ballType == BallType.WHITE){Debug.Log(_rb.velocity);}
-        if(Mathf.Sqrt(Mathf.Pow(_rb.velocity.x, 2) + Mathf.Pow(_rb.velocity.y, 2) + Mathf.Pow(_rb.velocity.z, 2)) <= Mathf.Sqrt(0.0001f)){
+        if (ballType == BallType.WHITE) { Debug.Log(_rb.velocity); }
+        if (Mathf.Sqrt(Mathf.Pow(_rb.velocity.x, 2) + Mathf.Pow(_rb.velocity.y, 2) + Mathf.Pow(_rb.velocity.z, 2)) <= Mathf.Sqrt(0.0001f))
+        {
             _rb.velocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
         }
     }
     public IEnumerator ManageVelocityEnum()
     {
-        while(true)
+        while (true)
         {
             _rb.velocity = _rb.velocity * 0.991f;
             _rb.angularVelocity = _rb.angularVelocity * 0.991f;
-        if(Mathf.Sqrt(Mathf.Pow(_rb.velocity.x, 2) + Mathf.Pow(_rb.velocity.y, 2) + Mathf.Pow(_rb.velocity.z, 2)) <= Mathf.Sqrt(0.0001f)){
-            _rb.velocity = Vector3.zero;
-            _rb.angularVelocity = Vector3.zero;
-        }
-        //yield return new WaitForEndOfFrame();
-        yield return new WaitForFixedUpdate();
+            if (Mathf.Sqrt(Mathf.Pow(_rb.velocity.x, 2) + Mathf.Pow(_rb.velocity.y, 2) + Mathf.Pow(_rb.velocity.z, 2)) <= Mathf.Sqrt(0.0001f))
+            {
+                _rb.velocity = Vector3.zero;
+                _rb.angularVelocity = Vector3.zero;
+            }
+            //yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
         }
     }
     public void ApplyPhysics()
     {
-        if(_rb != null)
+        if (_rb != null)
         {
             _rb.angularDrag = PhysicsController.instance.getAngularDrag();
             _rb.mass = PhysicsController.instance.getBallMass();
@@ -74,10 +80,10 @@ public class BallController : MonoBehaviour
     public void GotPocketed(PocketType pocketType)
     {
         GameController.instance.CheckPocketedBall(this, pocketType);
-        if(ballType == BallType.HALF || ballType == BallType.FULL)
+        if (ballType == BallType.HALF || ballType == BallType.FULL)
         {
-        PhysicsController.physicsDelegate -= ApplyPhysics;
-        Destroy(gameObject, 2f);
+            PhysicsController.physicsDelegate -= ApplyPhysics;
+            Destroy(gameObject, 2f);
         }
     }
     // BUG after foul ball falls through table
