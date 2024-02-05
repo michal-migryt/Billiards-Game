@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PhysicsController : MonoBehaviour
 {
-    [SerializeField]private float ballMass;
-    [SerializeField]private float dragRate;
-    [SerializeField]private float angularDragRate;
-    [SerializeField]private float defaultMass;
-    [SerializeField]private float defaultDrag;
-    [SerializeField]private float defaultAngDrag;
+    [SerializeField] private float ballMass;
+    [SerializeField] private float dragRate;
+    [SerializeField] private float angularDragRate;
+    [SerializeField] private float defaultMass;
+    [SerializeField] private float defaultDrag;
+    [SerializeField] private float defaultAngDrag;
     private float tempMass, tempDrag, tempAngDrag;
     public static PhysicsController instance;
     public delegate void OnPhysicsChanged();
@@ -28,9 +28,6 @@ public class PhysicsController : MonoBehaviour
     void Start()
     {
         physicsDelegate.Invoke();
-    }
-    void Update()
-    {
     }
     public void SetDefaultPhysics()
     {

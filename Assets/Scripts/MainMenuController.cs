@@ -14,7 +14,7 @@ public class MainMenuController : MonoBehaviour
         Application.Quit();
     }
 
-    public IEnumerator LoadNextLevel()
+    private IEnumerator LoadNextLevel()
     {
         animator.SetTrigger("StartLoading");
         yield return new WaitForSeconds(1f);
